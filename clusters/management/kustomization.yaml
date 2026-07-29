@@ -5,6 +5,7 @@ resources:
   - ../../components/cluster
   - configmap.yaml
   - credentials-sealed.yaml
+  - tenant-clusters-kustomization.yaml
 
 # Patch the Helm release for the cluster to update the release name
 #   This ensures we get nicely named resources in OpenStack

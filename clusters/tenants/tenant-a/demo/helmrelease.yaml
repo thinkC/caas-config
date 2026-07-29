@@ -1,0 +1,57 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: demo
+  namespace: capi-self
+spec:
+  chartRef:
+    kind: HelmChart
+    name: openstack-cluster
+  releaseName: demo
+  install:
+    remediation:
+      retries: -1
+    # Allow 30 minutes for the initial provisioning
+    timeout: 30m
+  upgrade:
+    remediation:
+      retries: 3
+  # Reconcile every 10 minutes
+  interval: 10m
+  values:
+    # Must match the name of the (sealed) secret in credentials-sealed.yaml
+    cloudCredentialsSecretName: demo-openstack
+
+    kubernetesVersion: 1.34.1
+    machineImageId: "e3b3c216-9cac-4fee-8a1e-aa95d942f643"
+
+    clusterNetworking:
+      externalNetworkId: "57add367-d205-4030-a929-d75617a7c63e"
+
+    controlPlane:
+      machineFlavor: "vm.v1.small"
+      machineCount: 1
+
+    nodeGroups:
+      - name: workers
+        machineFlavor: "vm.v1.large"
+        machineCount: 1
+    machineSSHKeyName: bo307-mywsl1
+
+    addons:
+      # Use the cilium CNI
+      cni:
+        type: cilium
+
+      # Enable the monitoring stack
+      monitoring:
+        enabled: true
+
+      # Disable NFD and the NVIDIA/Mellanox operators
+      nodeFeatureDiscovery:
+        enabled: false
+      nvidiaGPUOperator:
+        enabled: false
+      mellanoxNetworkOperator:
+        enabled: false

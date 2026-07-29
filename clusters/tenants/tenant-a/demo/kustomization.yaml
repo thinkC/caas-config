@@ -1,0 +1,3 @@
+resources:
+  - credentials-sealed.yaml
+  - helmrelease.yaml
