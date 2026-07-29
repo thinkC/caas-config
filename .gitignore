@@ -3,6 +3,7 @@
 kubeconfig
 .vscode
 **/.DS_Store
+.claude/
 
 # Don't track unsealed credentials files
 clusters/*/credentials.yaml
